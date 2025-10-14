@@ -3,7 +3,7 @@
     "dockerComposeFile": "docker-compose.yml",
     "service": "auth-service",
     "workspaceFolder": "/workspace",
-    "forwardPorts": [8090],
+    "forwardPorts": ["8090:8080"],
     "customizations": {
         "vscode": {
             "extensions": [
