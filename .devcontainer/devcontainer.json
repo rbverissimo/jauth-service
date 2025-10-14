@@ -1,0 +1,17 @@
+{
+    "name": "Java Spring Boot Auth Service Dev Container",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "auth-service",
+    "workspaceFolder": "/workspace",
+    "forwardPorts": [8090],
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "vscjava.vscode-java-pack",
+                "vmware.vscode-boot-dev-pack"
+            ]
+        }
+    },
+    "postCreateCommand": "java -version"
+
+}
