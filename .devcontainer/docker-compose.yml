@@ -3,4 +3,18 @@ services:
     build: .
     volumes:
       - ..:/workspace:cached
+    ports:
+      - "8090:8080"
     command: sleep infinity
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: userdev
+      POSTGRES_PASSWORD: userdevkey
+      POSTGRES_DB: devdb
+    volumes:
+      - jauth-service-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+volumes:
+  jauth-service-data:
