@@ -1,0 +1,12 @@
+CREATE EXTENSION IF NOT EXISTS "pg_ulid";
+
+CREATE TABLE roles (
+    id ULID PRIMARY KEY DEFAULT ulid(),
+    name VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE users (
+    id ULID PRIMARY KEY DEFAULT ulid(),
+    username VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL
+);

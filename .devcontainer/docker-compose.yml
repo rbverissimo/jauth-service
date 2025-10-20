@@ -6,7 +6,7 @@ services:
     ports:
       - "8090:8080"
     command: sleep infinity
-  db:
+  auth-db:
     image: postgres:16
     environment:
       POSTGRES_USER: userdev
