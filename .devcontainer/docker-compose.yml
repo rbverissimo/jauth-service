@@ -7,7 +7,7 @@ services:
       - "8090:8080"
     command: sleep infinity
   auth-db:
-    build: ./postgresql
+    image: ghcr.io/vadosware/pg_idkit:0.2.1-pg16.1-alpine3.18-amd64
     environment:
       POSTGRES_USER: userdev
       POSTGRES_PASSWORD: userdevkey
