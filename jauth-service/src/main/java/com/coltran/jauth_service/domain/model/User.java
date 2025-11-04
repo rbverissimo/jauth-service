@@ -12,6 +12,8 @@ import com.github.f4b6a3.ulid.UlidCreator;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinTable;
@@ -45,6 +47,14 @@ public class User implements Serializable {
         inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "auth_provider", nullable = false)
+    private AuthProvider authProvider;
+
+    @Column(name = "provider_id", nullable = true)
+    private String providerId;
+
 
     @Column(name = "verified_at", nullable = true)
     private OffsetDateTime verifiedAt;
@@ -126,7 +136,21 @@ public class User implements Serializable {
         this.updatedAt = updatedAt;
     }
     
+    public AuthProvider getAuthProvider() {
+        return authProvider;
+    }
 
+    public void setAuthProvider(AuthProvider authProvider) {
+        this.authProvider = authProvider;
+    }
 
+    public String getProviderId() {
+        return providerId;
+    }
+
+    public void setProviderId(String providerId) {
+        this.providerId = providerId;
+    }
+    
 
 }
