@@ -13,21 +13,21 @@ public record UserInfoResponse(
     String email,
     String name,
     String authProviderName,
-    Set<String> roles
+    Set<String> rolesNames
 ) {
 
     public static UserInfoResponse from(User user) {
-        Set<String> roles = user.getRoles()
+        Set<String> rolesNames = user.getRoles()
             .stream()
             .map(role -> role.getName().name())
             .collect(Collectors.toSet());
-            
+
         return new UserInfoResponse(
             user.getId(),
             user.getEmail(),
             user.getPublicName(),
             user.getAuthProvider().name(),
-            roles
+            rolesNames
         );
 
     }

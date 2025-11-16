@@ -72,6 +72,14 @@ public class User implements Serializable {
         this.roles = new HashSet<>();
     }
 
+    public User(String email, String name, String password) {
+        
+        this.id = UlidCreator.getUlid().toString();
+        this.email = email;
+        this.publicName = name;
+        this.password = password;
+    }
+
     public String getId() {
         return id;
     }
