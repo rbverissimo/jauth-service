@@ -1,14 +1,19 @@
 package com.coltran.jauth_service.application.service;
 
-import org.apache.kafka.common.config.types.Password;
+import java.util.Set;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.coltran.jauth_service.application.dto.RegisterRequest;
+import com.coltran.jauth_service.application.dto.UserInfoResponse;
+import com.coltran.jauth_service.domain.model.Role;
+import com.coltran.jauth_service.domain.model.RoleName;
 import com.coltran.jauth_service.domain.model.User;
 import com.coltran.jauth_service.domain.repository.RoleRepository;
 import com.coltran.jauth_service.domain.repository.UserRepository;
-import com.nimbusds.openid.connect.sdk.UserInfoResponse;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class AuthService {
@@ -24,6 +29,7 @@ public class AuthService {
         this.roleRepository = roleRepository;
     }
 
+    @Transactional
     public UserInfoResponse registerLocalUser(RegisterRequest registerRequest) {
         if(userRepository.existsByEmail(registerRequest.email())){
             throw new IllegalArgumentException("Error: Email already in use");
@@ -33,7 +39,14 @@ public class AuthService {
             registerRequest.publicName(),
             passwordEncoder.encode(registerRequest.password())
         );
-        return null; 
+
+        Role userRole = roleRepository.findByName(RoleName.ROLE_USER.name()).orElseThrow(
+            () -> new RuntimeException("Error: Default ROLE_USER not found")
+        );
+
+        user.setRoles(Set.of(userRole));
+        User savedUser = userRepository.save(user);
+        return UserInfoResponse.from(savedUser);
     }
 
 
