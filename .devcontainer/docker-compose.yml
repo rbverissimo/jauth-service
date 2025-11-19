@@ -5,6 +5,8 @@ services:
       - ..:/workspace:cached
     ports:
       - "8090:8080"
+    networks:
+      - ms-study-dev
     command: sleep infinity
   auth-db:
     image: ghcr.io/vadosware/pg_idkit:0.2.1-pg16.1-alpine3.18-amd64
@@ -16,5 +18,10 @@ services:
       - authj-service-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    networks:
+      - ms-study-dev
 volumes:
   authj-service-data:
+networks:
+  ms-study-dev:
+    external: true
