@@ -7,7 +7,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.coltran.jauth_service.application.dto.AuthResponse;
+import com.coltran.jauth_service.application.dto.LoginRequest;
 import com.coltran.jauth_service.application.dto.RegisterRequest;
 import com.coltran.jauth_service.application.dto.UserInfoResponse;
 import com.coltran.jauth_service.application.service.AuthService;
@@ -24,16 +27,19 @@ public class AuthController {
         this.authService = authService;
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponse> loginLocalUser(@Valid @RequestBody LoginRequest loginRequest){
+        return ResponseEntity.noContent().build(); 
+    }
+
     @PostMapping("/register")
     public ResponseEntity<UserInfoResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
         UserInfoResponse userInfoResponse = authService.registerLocalUser(registerRequest);
 
-        /* URI location = ServletUriComponentsBuilder
+         URI location = ServletUriComponentsBuilder
             .fromCurrentContextPath()
             .path("/api/users/{id}")
-            .buildAndExpand(userInfoResponse.id()).toUri(); */
-        
-        URI location = null;
+            .buildAndExpand(userInfoResponse.id()).toUri();
 
         return ResponseEntity.created(location).body(userInfoResponse);
     }
