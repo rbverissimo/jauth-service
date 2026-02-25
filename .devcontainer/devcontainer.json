@@ -3,14 +3,20 @@
     "dockerComposeFile": "docker-compose.yml",
     "service": "auth-service",
     "workspaceFolder": "/workspace",
+    "features": {
+        "ghcr.io/devcontainers/features/node:1": {
+            "version": "lts"
+        }
+    },
     "customizations": {
         "vscode": {
             "extensions": [
                 "vscjava.vscode-java-pack",
-                "vmware.vscode-boot-dev-pack"
+                "vmware.vscode-boot-dev-pack",
+                "google.gemini-code-assist"
             ]
         }
     },
-    "postCreateCommand": "java -version"
+    "postCreateCommand": "java -version && npm install -g @google/gemini-cli"
 
 }
