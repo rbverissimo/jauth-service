@@ -21,6 +21,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 
 @Component
 public class JwtTokenProvider implements TokenProvider {
@@ -31,19 +32,19 @@ public class JwtTokenProvider implements TokenProvider {
     @Value("${app.jwt.expiration-ms}")
     private long jwtExpirationMs;
 
-    private SecretKey getSigningKey() {
-        return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
+    private SecretKey key;
+    private JwtParser jwtParser;
+
+    @PostConstruct
+    public void init() {
+        this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
+        this.jwtParser = Jwts.parser().verifyWith(key).build();
     }
 
-    private JwtParser getParser() {
-        return Jwts.parser()
-            .verifyWith(getSigningKey())
-            .build();
-    }
 
     private Optional<Claims> getClaims(String token) {
         try {
-            return Optional.of(getParser()
+            return Optional.of(jwtParser
                 .parseSignedClaims(token)
                 .getPayload()
             );
@@ -68,7 +69,7 @@ public class JwtTokenProvider implements TokenProvider {
             .claim("roles", roles)
             .issuedAt(Date.from(now))
             .expiration(Date.from(expiryDate))
-            .signWith(getSigningKey())
+            .signWith(key)
             .compact();
     }
 
