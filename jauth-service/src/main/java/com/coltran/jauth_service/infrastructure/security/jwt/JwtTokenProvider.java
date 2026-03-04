@@ -54,6 +54,9 @@ public class JwtTokenProvider implements TokenProvider {
     }
 
     public String generateToken(User user){
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null when generating token");
+        }
 
         Instant now = Instant.now();
         Instant expiryDate = now.plus(jwtExpirationMs, ChronoUnit.MILLIS);

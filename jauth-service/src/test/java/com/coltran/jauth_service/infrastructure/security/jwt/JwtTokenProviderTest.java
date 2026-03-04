@@ -74,10 +74,9 @@ class JwtTokenProviderTest {
     @Test
     @DisplayName("Validate Token should return false for an expired token")
     void validateToken_shouldReturnFalseForExpiredToken() {
-        ReflectionTestUtils.setField(jwtTokenProvider, "jwtExpirationMs", -1000L); // Set expiration to the past
+        ReflectionTestUtils.setField(jwtTokenProvider, "jwtExpirationMs", -1000L); 
         User user = createTestUser();
         String token = jwtTokenProvider.generateToken(user);
-
         assertFalse(jwtTokenProvider.validateToken(token));
     }
 
