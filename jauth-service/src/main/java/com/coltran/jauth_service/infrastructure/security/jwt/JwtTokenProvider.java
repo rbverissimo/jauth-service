@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -20,6 +21,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.lang.Arrays;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 
@@ -84,5 +86,13 @@ public class JwtTokenProvider implements TokenProvider {
         return getClaims(token)
             .map(Claims::getSubject)
             .orElseThrow(() -> new BadCredentialsException("Invalid JWT Token"));
+    }
+
+    public List<String> getRolesFromToken(String token) {
+        return getClaims(token)
+            .map(claims -> claims.get("roles", String.class))
+            .filter(roles -> roles != null && !roles.isBlank())
+            .map(roles -> Arrays.asList(roles.split(",")))
+            .orElse(List.of());
     }
 }

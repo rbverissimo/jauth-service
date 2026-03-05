@@ -3,6 +3,7 @@ package com.coltran.jauth_service.infrastructure.security.jwt;
 import java.io.IOException;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -28,7 +29,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if(jwt != null && jwtTokenProvider.validateToken(jwt)) {
             String userId = jwtTokenProvider.getUserIdFromToken(jwt);
 
-            var authentication = new UsernamePasswordAuthenticationToken(userId, null, null);
+            var authorities = jwtTokenProvider.getRolesFromToken(jwt).stream()
+                .map(SimpleGrantedAuthority::new)
+                .toList();
+
+            var authentication = new UsernamePasswordAuthenticationToken(userId, null, authorities);
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
@@ -43,5 +48,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         return null; 
     }
+
     
 }
