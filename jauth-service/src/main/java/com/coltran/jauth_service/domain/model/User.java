@@ -5,8 +5,11 @@ import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.hibernate.annotations.SoftDelete;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.domain.Persistable;
 
 import com.github.f4b6a3.ulid.UlidCreator;
 
@@ -18,12 +21,14 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.PostLoad;
+import jakarta.persistence.PostPersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.JoinColumn;;
 
 @Entity
 @Table(name = "users")
-public class User implements Serializable {
+public class User implements Serializable, Persistable<String> {
  
     private static final long serialVersionUID = 1L;
 
@@ -59,13 +64,17 @@ public class User implements Serializable {
     @Column(name = "verified_at", nullable = true)
     private OffsetDateTime verifiedAt;
 
-    @SoftDelete
+    @SQLDelete(sql = "UPDATE users SET deleted_at = CURRENT_TIMESTAMP WHERE id=?")
+    @SQLRestriction("deleted_at IS NULL")
     @Column(name = "deleted_at", nullable = true)
     private OffsetDateTime deletedAt;
 
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private OffsetDateTime updatedAt;
+
+    @Transient
+    private boolean isNew = true;
 
     public User() {
         this.id = UlidCreator.getUlid().toString();
@@ -78,6 +87,7 @@ public class User implements Serializable {
         this.email = email;
         this.publicName = name;
         this.password = password;
+        this.roles = new HashSet<>();
     }
 
     public String getId() {
@@ -158,6 +168,17 @@ public class User implements Serializable {
 
     public void setProviderId(String providerId) {
         this.providerId = providerId;
+    }
+
+    @Override
+    public boolean isNew() {
+        return isNew;
+    }
+
+    @PostPersist
+    @PostLoad
+    void markNotNew() {
+
     }
     
 
