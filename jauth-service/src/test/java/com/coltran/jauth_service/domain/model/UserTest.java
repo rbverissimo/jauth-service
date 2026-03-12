@@ -4,6 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+
+import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -45,6 +49,8 @@ public class UserTest {
 
     }
 
+    @Test
+    @DisplayName("Should successfully add and retrieve roles from the user entity")
     void roleManagement_ShouldUpdateRolesSet() {
         User user = new User();
 
@@ -62,10 +68,12 @@ public class UserTest {
     }
 
     @Test
-    @DisplayName("markNotNew should set isNew to false")
-    void markNotNew_ShouldSetIsNewToFalse() {
+    @DisplayName("Should correctly handle JPA lifecycle transition for isNew state")
+    void markNotNew_ShouldTransitionEntityState() {
+        
         User user = new User();
         assertTrue(user.isNew());
+        
         user.markNotNew();
 
         assertTrue(!user.isNew(), "isNew should be false after calling markNotNew");   
@@ -76,6 +84,23 @@ public class UserTest {
     @DisplayName("Should correctly set and retrieve state management fields (Timestamps and AuthProvider)")
     void stateFields_ShouldWorkCorrectly() {
         User user = new User();
+
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+
+        user.setUpdatedAt(now);
+        user.setVerifiedAt(now);
+        user.setDeletedAt(now);
+
+        user.setAuthProvider(AuthProvider.GOOGLE);
+        user.setProviderId("google-oauth2-12345");
+
+        assertEquals(now, user.getUpdatedAt());
+        assertEquals(now, user.getVerifiedAt());
+        assertEquals(now, user.getDeletedAt());
+
+        assertEquals(AuthProvider.GOOGLE, user.getAuthProvider());
+        assertEquals("google-oauth2-12345", user.getProviderId());
+        
 
     }  
 }
