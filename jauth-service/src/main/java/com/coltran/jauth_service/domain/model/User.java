@@ -178,8 +178,7 @@ public class User implements Serializable, Persistable<String> {
     @PostPersist
     @PostLoad
     void markNotNew() {
-
-    }
-    
+        this.isNew = false;
+    } 
 
 }
