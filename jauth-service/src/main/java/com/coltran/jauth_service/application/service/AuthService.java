@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.coltran.jauth_service.application.dto.RegisterRequest;
 import com.coltran.jauth_service.application.dto.UserInfoResponse;
+import com.coltran.jauth_service.domain.exception.UserException;
 import com.coltran.jauth_service.domain.model.Role;
 import com.coltran.jauth_service.domain.model.RoleName;
 import com.coltran.jauth_service.domain.model.User;
@@ -49,5 +50,10 @@ public class AuthService {
         return UserInfoResponse.from(savedUser);
     }
 
+    public User getUserByEmail(String email) throws UserException { 
+        return userRepository.findByEmail(email).orElseThrow(
+            () -> new UserException("User not found with email: " + email)
+        );
+    }
 
 }

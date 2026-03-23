@@ -5,24 +5,22 @@ import java.util.stream.Collectors;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import com.coltran.jauth_service.application.service.AuthService;
+import com.coltran.jauth_service.domain.exception.UserException;
 import com.coltran.jauth_service.domain.model.User;
-import com.coltran.jauth_service.domain.repository.UserRepository;
 
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final AuthService authService;
 
-    public CustomUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public CustomUserDetailsService(AuthService authService) {
+        this.authService = authService;
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
-
+    public UserDetails loadUserByUsername(String email) throws UserException {
+        User user = authService.getUserByEmail(email);
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
                 user.getPassword(),
