@@ -7,7 +7,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.coltran.jauth_service.application.service.AuthService;
-import com.coltran.jauth_service.domain.exception.UserException;
 import com.coltran.jauth_service.domain.model.User;
 
 public class CustomUserDetailsService implements UserDetailsService {
@@ -19,7 +18,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UserException {
+    public UserDetails loadUserByUsername(String email) {
         User user = authService.getUserByEmail(email);
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
