@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.coltran.jauth_service.application.dto.ErrorResponse;
+import com.coltran.jauth_service.presentation.dto.ErrorResponse;
 import com.coltran.jauth_service.domain.exception.UserNotFoundException;
 
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,4 +1,4 @@
-package com.coltran.jauth_service.application.dto;
+package com.coltran.jauth_service.presentation.dto;
 
 import java.time.OffsetDateTime;
 
