@@ -4,6 +4,7 @@ import java.util.Set;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.coltran.jauth_service.application.dto.RegisterRequest;
 import com.coltran.jauth_service.application.dto.UserInfoResponse;
@@ -13,8 +14,6 @@ import com.coltran.jauth_service.domain.model.RoleName;
 import com.coltran.jauth_service.domain.model.User;
 import com.coltran.jauth_service.domain.repository.RoleRepository;
 import com.coltran.jauth_service.domain.repository.UserRepository;
-
-import jakarta.transaction.Transactional;
 
 @Service
 public class AuthService {
@@ -32,10 +31,12 @@ public class AuthService {
 
     @Transactional
     public UserInfoResponse registerLocalUser(RegisterRequest registerRequest) {
+        
         if(userRepository.existsByEmail(registerRequest.email())){
             throw new IllegalArgumentException("Error: Email already in use");
         }
-        User user = new User(
+
+        User user =  User.createLocalUser(
             registerRequest.email(),
             registerRequest.publicName(),
             passwordEncoder.encode(registerRequest.password())
@@ -50,6 +51,7 @@ public class AuthService {
         return UserInfoResponse.from(savedUser);
     }
 
+    @Transactional(readOnly = true)
     public User getUserByEmail(String email) { 
         return userRepository.findByEmail(email).orElseThrow(
             () -> new UserNotFoundException("User not found with email: " + email)

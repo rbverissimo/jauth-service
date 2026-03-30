@@ -2,6 +2,7 @@ package com.coltran.jauth_service.domain.model;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -89,6 +90,40 @@ public class User implements Serializable, Persistable<String> {
         this.password = password;
         this.roles = new HashSet<>();
     }
+
+    private User(String email, String name, String password, AuthProvider authProvider, String providerId) {
+        
+        this.id = UlidCreator.getUlid().toString();
+        this.email = email;
+        this.publicName = name;
+        this.password = password;
+        this.authProvider = authProvider;
+        this.providerId = providerId;
+        this.roles = new HashSet<>();
+    }
+
+    public static User createLocalUser(String email, String publicName, String encodedPassword) {
+        return new User(
+            email,
+            publicName,
+            encodedPassword,
+            AuthProvider.LOCAL,
+            null
+        );
+    }
+
+    public static User createOAuth2User(String email, String publicName, AuthProvider authProvider, String providerId) {
+        User auth2User =  new User(
+            email,
+            publicName,
+            null,
+            authProvider,
+            providerId
+        );
+        auth2User.setVerifiedAt(OffsetDateTime.now(ZoneOffset.UTC));
+        return auth2User;
+    }
+
 
     public String getId() {
         return id;
