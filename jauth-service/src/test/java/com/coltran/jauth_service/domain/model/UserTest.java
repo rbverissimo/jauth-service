@@ -102,5 +102,44 @@ public class UserTest {
         
 
     }  
+
+    @Test
+    @DisplayName("createLocalUser should create a user with AuthProvider.LOCAL")
+    void createLocalUser_ShouldSetCorrectAuthProvider() {
+        String email = "local@example.com";
+        String publicName = "Local User";
+        String password = "securePassword";
+
+        User localUser = User.createLocalUser(email, publicName, password);
+
+        assertEquals(email, localUser.getEmail());
+        assertEquals(publicName, localUser.getPublicName());
+        assertEquals(password, localUser.getPassword());
+        assertEquals(AuthProvider.LOCAL, localUser.getAuthProvider());
+        assertNotNull(localUser.getId());
+        assertTrue(localUser.getRoles().isEmpty());
+        assertTrue(localUser.isNew());
+    }
+
+    @Test
+    @DisplayName("createOAuth2User should create a user with the specified AuthProvider and mark as verified")
+    void createOAuth2User_ShouldSetCorrectAuthProviderAndBeVerified() {
+        String email = "oauth@example.com";
+        String publicName = "OAuth User";
+        AuthProvider provider = AuthProvider.GOOGLE;
+        String providerId = "google-123";
+
+        User oauthUser = User.createOAuth2User(email, publicName, provider, providerId);
+
+        assertEquals(email, oauthUser.getEmail());
+        assertEquals(publicName, oauthUser.getPublicName());
+        assertEquals(provider, oauthUser.getAuthProvider());
+        assertEquals(providerId, oauthUser.getProviderId());
+        assertEquals(null, oauthUser.getPassword());
+        assertNotNull(oauthUser.getVerifiedAt());
+        assertNotNull(oauthUser.getId());
+        assertTrue(oauthUser.getRoles().isEmpty());
+        assertTrue(oauthUser.isNew());
+    }
 }
  
