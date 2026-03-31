@@ -9,7 +9,6 @@ import java.util.Set;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.Transient;
 import org.springframework.data.domain.Persistable;
 
 import com.github.f4b6a3.ulid.UlidCreator;
@@ -25,6 +24,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.PostLoad;
 import jakarta.persistence.PostPersist;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.persistence.JoinColumn;;
 
 @Entity
