@@ -23,9 +23,9 @@ public class UserRepositoryAdapter implements UserRepository {
     }
 
     @Override
-    public Optional<User> findByAuthProviderAndProviderId(String authProvider, String providerId) {
+    public Optional<User> findByAuthProviderAndProviderId(AuthProvider authProvider, String providerId) {
         return jpaUserRepository.findByAuthProviderAndProviderId(
-            AuthProvider.valueOf(authProvider), 
+            authProvider, 
             providerId
         );
     }
