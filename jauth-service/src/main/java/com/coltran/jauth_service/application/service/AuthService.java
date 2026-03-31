@@ -42,7 +42,7 @@ public class AuthService {
             passwordEncoder.encode(registerRequest.password())
         );
 
-        Role userRole = roleRepository.findByName(RoleName.ROLE_USER.name()).orElseThrow(
+        Role userRole = roleRepository.findByName(RoleName.ROLE_USER).orElseThrow(
             () -> new RuntimeException("Error: Default ROLE_USER not found")
         );
 
