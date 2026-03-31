@@ -58,7 +58,7 @@ class AuthServiceTest {
         
         when(userRepository.existsByEmail(request.email())).thenReturn(false);
         when(passwordEncoder.encode(request.password())).thenReturn(encodedPassword);
-        when(roleRepository.findByName(RoleName.ROLE_USER.name())).thenReturn(Optional.of(userRole));
+        when(roleRepository.findByName(RoleName.ROLE_USER)).thenReturn(Optional.of(userRole));
         when(userRepository.save(any(User.class))).thenReturn(savedUser);
 
         UserInfoResponse response = authService.registerLocalUser(request);
@@ -69,7 +69,7 @@ class AuthServiceTest {
 
         verify(userRepository).existsByEmail(request.email());
         verify(passwordEncoder).encode(request.password());
-        verify(roleRepository).findByName(RoleName.ROLE_USER.name());
+        verify(roleRepository).findByName(RoleName.ROLE_USER);
         verify(userRepository).save(any(User.class));
 
     }
@@ -89,7 +89,7 @@ class AuthServiceTest {
         assertEquals("Error: Email already in use", exception.getMessage());
 
         verify(passwordEncoder, never()).encode(anyString());
-        verify(roleRepository, never()).findByName(anyString());
+        verify(roleRepository, never()).findByName(any(RoleName.class));
         verify(userRepository, never()).save(any(User.class));
 
     }
@@ -107,7 +107,7 @@ class AuthServiceTest {
 
         when(userRepository.existsByEmail(request.email())).thenReturn(false);
         when(passwordEncoder.encode(request.password())).thenReturn("encodedPassword");
-        when(roleRepository.findByName(RoleName.ROLE_USER.name())).thenReturn(Optional.empty());
+        when(roleRepository.findByName(RoleName.ROLE_USER)).thenReturn(Optional.empty());
 
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             authService.registerLocalUser(request);
